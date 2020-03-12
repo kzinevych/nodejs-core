@@ -1,0 +1,8 @@
+{
+  "limitValidation": "Повинно бути числом",
+  "offsetValidation": "Повинно бути числом",
+  "orderIdValidation": "Повинно бути числом",
+  "driverIdValidation": "Повинно бути числом",
+  "clientIdValidation": "Повинно бути числом",
+  "notFoundHistoryOrder": "Не знайшли історію замовлення з id:"
+}

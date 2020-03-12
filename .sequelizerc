@@ -1,0 +1,6 @@
+const path = require('path');
+
+module.exports = {
+  config: path.join(__dirname, 'config/db/config.js'),
+  'migrations-path': path.join(__dirname, 'server/migrations'),
+};

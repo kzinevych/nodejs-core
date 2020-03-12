@@ -1,0 +1,8 @@
+{
+  "limitValidation": "Should be integer",
+  "offsetValidation": "Should be integer",
+  "orderIdValidation": "Should be number",
+  "driverIdValidation": "Should be a number",
+  "clientIdValidation": "Should be a number",
+  "notFoundHistoryOrder": "Not found history of order with id: "
+}

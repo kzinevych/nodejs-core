@@ -1,0 +1,8 @@
+{
+  "limitValidation": "Должно быть числом",
+  "offsetValidation": "Должно быть числом",
+  "orderIdValidation": "Должно быть числом",
+  "driverIdValidation": "Должно быть числом",
+  "clientIdValidation": "Должно быть числом",
+  "notFoundHistoryOrder": "Не нашли историю заказа с id: "
+}

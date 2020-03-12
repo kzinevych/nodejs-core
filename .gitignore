@@ -1,0 +1,6 @@
+node_modules
+schema.gql
+config/local*
+files/*
+.idea
+logs
