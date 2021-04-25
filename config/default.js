@@ -44,6 +44,7 @@ module.exports = {
     user: '',
     password: '',
     port: 5672,
+    reconnectInterval: 5000,
   },
   jwt: {
     userSecret: '',

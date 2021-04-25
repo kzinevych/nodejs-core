@@ -1,7 +1,14 @@
 const config = require('config');
 const amqp = require('amqplib/callback_api');
 const { logger } = require('../utils');
-const mongo = require('../models');
+
+const {
+  host,
+  port,
+  user,
+  password,
+  reconnectInterval,
+} = config.get('rabbit');
 
 class Amqp {
   constructor(reconnectTime) {
@@ -12,12 +19,6 @@ class Amqp {
   }
 
   connectAmqp() {
-    const {
-      host,
-      port,
-      user,
-      password,
-    } = config.get('rabbit');
     const url = `amqp://${user}:${password}@${host}:${port}`;
     amqp.connect(`${url}?heartbeat=60`, (err, conn) => {
       if (err) {
@@ -82,78 +83,61 @@ class Amqp {
     }
   }
 
-  publish(exchangeName, key, message) {
+  publish(exchangeName, key, message, req) {
     if (this.amqpConnection) {
       if (this.publisherChannel) {
         const ch = this.publisherChannel;
         ch.prefetch(1);
 
-        logger.info(`[AMQP] exchange: ${exchangeName} | message: ${JSON.stringify(message)}.`);
-        ch.publish(exchangeName, key, Buffer.from(JSON.stringify(message)), { persistent: true });
+        const updatedMessage = Object.assign({}, message);
+        if (req) {
+          const ip = req.headers['x-forwarded-for']
+            || req.connection.remoteAddress
+            || req.socket.remoteAddress
+            || req.connection.socket.remoteAddress;
+          ip.replace(/^.*:/, '');
+          updatedMessage.req = {};
+          updatedMessage.req.xRequestId = req.headers['x-request-id'];
+          updatedMessage.req.statusCode = 200;
+          updatedMessage.req.origin = req.headers.origin;
+          updatedMessage.req.method = req.method;
+          updatedMessage.req.host = req.headers.host;
+          updatedMessage.req.originalUrl = req.originalUrl;
+          updatedMessage.req.requestBody = req.body;
+          updatedMessage.req.ip = ip;
+        }
+
+        logger.info({ message: `[AMQP] exchange: ${exchangeName}`, data: message });
+        ch.publish(exchangeName, key, Buffer.from(JSON.stringify(updatedMessage)), { persistent: true });
       }
     } else {
       logger.error('[AMQP] connection is not established.');
     }
   }
 
-  worker(queueName) {
-    return new Promise(() => {
-      if (this.amqpConnection) {
-        if (this.publisherChannel) {
-          const ch = this.consumerChannel;
-          ch.assertQueue(queueName, {}, (_err, q) => {
-            ch.consume(q.queue, async (msg) => {
-              logger.info({
-                route: msg.fields.routingKey,
-                msg: msg.content.toString(),
-              });
-              const {
-                id,
-                role,
-                orderId,
-                coordinates,
-                date,
-              } = JSON.parse(msg.content.toString());
-
-              if (role === 'client') {
-                mongo.db.collection('clientsCoordinates', async (error, collection) => {
-                  const geoResult = await collection.findOne({ orderId });
-                  if (!geoResult) {
-                    const geoData = {
-                      clientId: id,
-                      orderId,
-                      coordinates,
-                      date: new Date(date),
-                    };
-                    await collection.insert(geoData);
-                    logger.info(`client geo coordinates saved: ${JSON.stringify(geoData)}`);
-                  }
-                });
-              }
-
-              if (role === 'driver') {
-                mongo.db.collection('driversCoordinates', async (error, collection) => {
-                  const geoResult = await collection.findOne({ orderId });
-
-                  if (!geoResult) {
-                    const geoData = {
-                      driverId: id,
-                      orderId,
-                      coordinates,
-                      date: new Date(date),
-                    };
-                    await collection.insert(geoData);
-                    logger.info(`driver geo coordinates saved: ${JSON.stringify(geoData)}`);
-                  }
-                });
-              }
-            }, { noAck: true });
-          });
-        }
-      } else {
-        logger.error('[AMQP] connection is not established.');
+  worker(exchangeName, cb) {
+    if (this.amqpConnection) {
+      if (this.publisherChannel) {
+        const ch = this.consumerChannel;
+        ch.assertQueue(exchangeName, {}, (_err, q) => {
+          ch.consume(q.queue, (msg) => {
+            let content;
+            try {
+              content = JSON.parse(msg.content.toString());
+            } catch (err) {
+              logger.error(`ERROR parse in Consumed data message: ${err.message}`);
+            }
+            logger.info({ routingKey: msg.fields.routingKey, msg: content });
+            cb({
+              route: msg.fields.routingKey,
+              msg: msg.content.toString(),
+            });
+          }, { noAck: true });
+        });
       }
-    });
+    } else {
+      logger.error('[AMQP] connection is not established.');
+    }
   }
 
   closeOnErr(err) {
@@ -164,7 +148,7 @@ class Amqp {
   }
 }
 
-const rabbit = new Amqp(1000);
+const rabbit = new Amqp(reconnectInterval);
 rabbit.connectAmqp();
 
 module.exports = rabbit;

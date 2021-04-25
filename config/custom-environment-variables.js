@@ -26,6 +26,7 @@ module.exports = {
     user: 'RABBIT_USER',
     password: 'RABBIT_PASSWORD',
     port: 'RABBIT_PORT',
+    reconnectInterval: 'RECONNECT_INTERVAL',
   },
   jwt: {
     userSecret: 'USER_ACCESS_SECRET',
