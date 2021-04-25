@@ -1,11 +1,3 @@
-/**
- * @project core-service
- * @author Kostiantyn Zinevych
- * @version 1.0
- * @since 2019-08-13
- */
-// ----------turboSms----------
-
 const request = require('request-promise-native').defaults({
   jar: true,
   gzip: true,

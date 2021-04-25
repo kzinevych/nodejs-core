@@ -1,6 +1,5 @@
 module.exports = {
   env: 'test',
-  envShort: 'test',
   db: {
     logging: false,
   },

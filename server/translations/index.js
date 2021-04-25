@@ -1,10 +1,3 @@
-/**
- * @project driver-service
- * @author Kostiantyn Zinevych
- * @version 1.0
- * @since 2020-01-30
- */
-// ----------index----------
 const locale = require('locale');
 const fs = require('fs');
 const path = require('path');

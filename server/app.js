@@ -28,7 +28,7 @@ const app = express();
  * */
 app.use(express.static(`${__dirname}public`));
 app.use(helmet());
-if (!__TEST__) {
+if (__DEV__) {
   app.use(morgan('dev'));
 }
 app.use(timeout(120000));

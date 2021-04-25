@@ -12,7 +12,7 @@ function generateDocumentation(routeName, docsPath) {
     swaggerDefinition: {
       info: {
         termsOfServiceUrl: '',
-        contact: 'k.zinevych@gmail.com',
+        contact: '',
         version: packageJson.version,
         license: '',
         licenseUrl: '',

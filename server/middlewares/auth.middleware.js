@@ -1,10 +1,3 @@
-/**
- * @project static-service
- * @author Kostiantyn Zinevych
- * @version 1.0
- * @since 21.11.2017
- */
-// ----------auth.middleware----------
 const config = require('config');
 const jwtConfig = require('config').get('jwt');
 const redisClient = require('../redis');

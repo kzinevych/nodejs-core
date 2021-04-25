@@ -3,20 +3,19 @@ const moment = require('moment');
 module.exports = {
   name: 'core-service',
   env: 'production',
-  envShort: 'prod',
   sendGridApiKey: '',
-  port: 6007,
+  port: 8000,
   apiPrefix: '/api/v1',
   sessionSecret: '',
   enableCORS: false,
   requestTimeout: 10000,
   services: {},
-  adminEmail: 'cargoo.delivery@gmail.com',
-  emailVerificationPath: '/email-verification',
-  appId: '18dcbb60-f092-11e7-9ea0-05a976ec92c7',
+  adminEmail: '',
+  emailVerificationPath: '',
+  resetPasswordPath: '',
+  appId: '',
   proxyUrl: '',
   cmsApiKey: '',
-  resetPasswordPath: '/reset-password',
   logLevel: 'warn',
   bcryptIterations: 8,
   mongoDB: {
@@ -37,6 +36,7 @@ module.exports = {
   },
   redis: {
     host: '',
+    port: '',
     password: '',
   },
   rabbit: {

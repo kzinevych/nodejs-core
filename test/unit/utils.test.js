@@ -1,11 +1,3 @@
-/**
- * @project core-service
- * @author Kostiantyn Zinevych
- * @version 1.0
- * @since 2019-02-21
- */
-// ----------utils.it----------
-
 const moment = require('moment');
 const chai = require('chai');
 const {

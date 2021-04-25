@@ -1,17 +1,6 @@
-/**
- * @project core-service
- * @author Kostiantyn Zinevych
- * @version 1.0
- * @since 17.07.17
- */
-// ----------index----------
 const moment = require('moment');
 const config = require('config');
 const { createLogger, transports } = require('winston');
-
-if (!config.get('sendGridApiKey')) {
-  throw new Error('Sendgrid key env variable is not defined.');
-}
 
 const sg = require('sendgrid')(config.get('sendGridApiKey'));
 const { version } = require('../../package.json');
@@ -40,7 +29,6 @@ exports.errorLogger = function errorLogger(err, req, responseStatus) {
 
   logger.error({
     xRequestId: req.headers['x-request-id'],
-    env: config.get('envShort'),
     version,
     origin: req.headers.origin,
     method: req.method,
@@ -62,7 +50,7 @@ exports.responseLogger = function responseLogger(message, req, responseStatus) {
 
   logger.info({
     xRequestId: req.headers['x-request-id'],
-    env: config.get('envShort'),
+    env: config.get('env'),
     version,
     origin: req.headers.origin,
     method: req.method,

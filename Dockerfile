@@ -4,5 +4,5 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-EXPOSE 8779
-CMD [ "npm", "run", "start-docker" ]
+EXPOSE 80
+CMD [ "npm", "run", "start" ]
