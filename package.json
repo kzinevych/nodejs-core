@@ -1,15 +1,14 @@
 {
   "name": "core-service",
   "version": "1.0.0",
-  "description": "Core service",
-  "main": "server.js",
+  "description": "NodeJS core service",
+  "main": "server/bin/www.js",
   "scripts": {
-    "start-dev": "NODE_ENV=development nodemon ./server/bin/www",
     "start": "nodemon --inspect ./server/bin/www",
     "swagger-generate-json": "node swaggerGenerator.js",
-    "test": "NODE_ENV=test mocha --recursive",
     "eslint": "npx eslint server test",
-    "migrate": "npx sequelize db:migrate"
+    "migrate": "npx sequelize db:migrate",
+    "test": "mocha --recursive"
   },
   "author": "Kostiantyn Zinevych",
   "dependencies": {

@@ -1,6 +1,19 @@
-# TO DO #
+### To run Express server: ###
+`npm run start`
 
-# Priority goals: #
+### Generate swagger documentation: ###
+`npm run swagger-generate-json`
 
-# Low priority: #
+### Run linter: ###
+`npm run eslint`
+
+### Run migration: ###
+`npm run migrate`
+
+### Run Unit tests: ###
+`npm run test`
+
+
+
+
 
